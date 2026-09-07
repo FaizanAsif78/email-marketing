@@ -6,7 +6,6 @@
             @include('components.sidebar')
             <!-- Layout container -->
             <div class="layout-page">
-                @include('components.header')
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->

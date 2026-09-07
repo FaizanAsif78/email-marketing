@@ -1,9 +1,8 @@
 @extends('main')
 @section('main-content')
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
+    <div class="layout-wrapper layout-content-navbar layout-without-menu">
         <div class="layout-container">
-            @include('components.sidebar')
             <!-- Layout container -->
             <div class="layout-page">
                 @include('components.header')
@@ -17,7 +16,5 @@
                 </div>
             </div>
         </div>
-        <!-- Overlay -->
-        <div class="layout-overlay layout-menu-toggle"></div>
     </div>
 @endsection

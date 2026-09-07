@@ -1,8 +1,83 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AccountSettingsController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CardController;
 use App\Http\Controllers\DashboardController;
-Route::get('/', function () {
-    return view('welcome');
+use App\Http\Controllers\ExtendedUiController;
+use App\Http\Controllers\FormController;
+use App\Http\Controllers\IconsController;
+use App\Http\Controllers\LayoutsController;
+use App\Http\Controllers\MiscController;
+use App\Http\Controllers\TableController;
+use App\Http\Controllers\UiController;
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', fn () => redirect()->route('dashboard.index'));
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+
+Route::prefix('layouts')->name('layouts.')->group(function () {
+    Route::get('/without-menu', [LayoutsController::class, 'withoutMenu'])->name('without-menu');
+    Route::get('/without-navbar', [LayoutsController::class, 'withoutNavbar'])->name('without-navbar');
+    Route::get('/container', [LayoutsController::class, 'container'])->name('container');
+    Route::get('/fluid', [LayoutsController::class, 'fluid'])->name('fluid');
+    Route::get('/blank', [LayoutsController::class, 'blank'])->name('blank');
 });
-Route::get('/dashboard', [DashboardController::class, 'index']);
+
+Route::prefix('pages/account-settings')->name('account-settings.')->group(function () {
+    Route::get('/account', [AccountSettingsController::class, 'account'])->name('account');
+    Route::get('/notifications', [AccountSettingsController::class, 'notifications'])->name('notifications');
+    Route::get('/connections', [AccountSettingsController::class, 'connections'])->name('connections');
+});
+
+Route::prefix('auth')->name('auth.')->group(function () {
+    Route::get('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/register', [AuthController::class, 'register'])->name('register');
+    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
+});
+
+Route::prefix('pages/misc')->name('misc.')->group(function () {
+    Route::get('/error', [MiscController::class, 'error'])->name('error');
+    Route::get('/maintenance', [MiscController::class, 'maintenance'])->name('maintenance');
+});
+
+Route::get('/cards/basic', [CardController::class, 'index'])->name('cards.basic');
+
+Route::prefix('ui')->name('ui.')->group(function () {
+    Route::get('/accordion', [UiController::class, 'accordion'])->name('accordion');
+    Route::get('/alerts', [UiController::class, 'alerts'])->name('alerts');
+    Route::get('/badges', [UiController::class, 'badges'])->name('badges');
+    Route::get('/buttons', [UiController::class, 'buttons'])->name('buttons');
+    Route::get('/carousel', [UiController::class, 'carousel'])->name('carousel');
+    Route::get('/collapse', [UiController::class, 'collapse'])->name('collapse');
+    Route::get('/dropdowns', [UiController::class, 'dropdowns'])->name('dropdowns');
+    Route::get('/footer', [UiController::class, 'footer'])->name('footer');
+    Route::get('/list-groups', [UiController::class, 'listGroups'])->name('list-groups');
+    Route::get('/modals', [UiController::class, 'modals'])->name('modals');
+    Route::get('/navbar', [UiController::class, 'navbar'])->name('navbar');
+    Route::get('/offcanvas', [UiController::class, 'offcanvas'])->name('offcanvas');
+    Route::get('/pagination-breadcrumbs', [UiController::class, 'paginationBreadcrumbs'])->name('pagination-breadcrumbs');
+    Route::get('/progress', [UiController::class, 'progress'])->name('progress');
+    Route::get('/spinners', [UiController::class, 'spinners'])->name('spinners');
+    Route::get('/tabs-pills', [UiController::class, 'tabsPills'])->name('tabs-pills');
+    Route::get('/toasts', [UiController::class, 'toasts'])->name('toasts');
+    Route::get('/tooltips-popovers', [UiController::class, 'tooltipsPopovers'])->name('tooltips-popovers');
+    Route::get('/typography', [UiController::class, 'typography'])->name('typography');
+});
+
+Route::prefix('extended-ui')->name('extended-ui.')->group(function () {
+    Route::get('/perfect-scrollbar', [ExtendedUiController::class, 'perfectScrollbar'])->name('perfect-scrollbar');
+    Route::get('/text-divider', [ExtendedUiController::class, 'textDivider'])->name('text-divider');
+});
+
+Route::get('/icons/boxicons', [IconsController::class, 'index'])->name('icons.boxicons');
+
+Route::prefix('forms')->name('forms.')->group(function () {
+    Route::get('/basic-inputs', [FormController::class, 'basicInputs'])->name('basic-inputs');
+    Route::get('/input-groups', [FormController::class, 'inputGroups'])->name('input-groups');
+    Route::get('/layouts-vertical', [FormController::class, 'layoutsVertical'])->name('layouts-vertical');
+    Route::get('/layouts-horizontal', [FormController::class, 'layoutsHorizontal'])->name('layouts-horizontal');
+});
+
+Route::get('/tables/basic', [TableController::class, 'index'])->name('tables.basic');
