@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 ## Auth Routes
 Route::get('/', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authenticate');
+Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
