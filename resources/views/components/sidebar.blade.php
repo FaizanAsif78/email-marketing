@@ -72,41 +72,6 @@
             </a>
         </li>
 
-        <!-- Layouts -->
-        <li class="menu-item {{ $isGroup('layouts') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-layout"></i>
-                <div data-i18n="Layouts">Layouts</div>
-            </a>
-
-            <ul class="menu-sub">
-                <li class="menu-item {{ $is('layouts.without-menu') ? 'active' : '' }}">
-                    <a href="{{ route('layouts.without-menu') }}" class="menu-link">
-                        <div data-i18n="Without menu">Without menu</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('layouts.without-navbar') ? 'active' : '' }}">
-                    <a href="{{ route('layouts.without-navbar') }}" class="menu-link">
-                        <div data-i18n="Without navbar">Without navbar</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('layouts.container') ? 'active' : '' }}">
-                    <a href="{{ route('layouts.container') }}" class="menu-link">
-                        <div data-i18n="Container">Container</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('layouts.fluid') ? 'active' : '' }}">
-                    <a href="{{ route('layouts.fluid') }}" class="menu-link">
-                        <div data-i18n="Fluid">Fluid</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('layouts.blank') ? 'active' : '' }}">
-                    <a href="{{ route('layouts.blank') }}" class="menu-link">
-                        <div data-i18n="Blank">Blank</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pages</span>
@@ -134,192 +99,11 @@
                 </li>
             </ul>
         </li>
-        <li class="menu-item {{ $isGroup('auth') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                <div data-i18n="Authentications">Authentications</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ $is('auth.login') ? 'active' : '' }}">
-                    <a href="{{ route('auth.login') }}" class="menu-link">
-                        <div data-i18n="Basic">Login</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('auth.register') ? 'active' : '' }}">
-                    <a href="{{ route('auth.register') }}" class="menu-link">
-                        <div data-i18n="Basic">Register</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('auth.forgot-password') ? 'active' : '' }}">
-                    <a href="{{ route('auth.forgot-password') }}" class="menu-link">
-                        <div data-i18n="Basic">Forgot Password</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-item {{ $isGroup('misc') ? 'active open' : '' }}">
-            <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                <div data-i18n="Misc">Misc</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ $is('misc.error') ? 'active' : '' }}">
-                    <a href="{{ route('misc.error') }}" class="menu-link">
-                        <div data-i18n="Error">Error</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('misc.maintenance') ? 'active' : '' }}">
-                    <a href="{{ route('misc.maintenance') }}" class="menu-link">
-                        <div data-i18n="Under Maintenance">Under Maintenance</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <!-- Components -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Components</span></li>
-        <!-- Cards -->
-        <li class="menu-item {{ $is('cards.basic') ? 'active' : '' }}">
-            <a href="{{ route('cards.basic') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-collection"></i>
-                <div data-i18n="Basic">Cards</div>
-            </a>
-        </li>
-        <!-- User interface -->
-        <li class="menu-item {{ $isGroup('ui') ? 'active open' : '' }}">
-            <a href="javascript:void(0)" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-box"></i>
-                <div data-i18n="User interface">User interface</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ $is('ui.accordion') ? 'active' : '' }}">
-                    <a href="{{ route('ui.accordion') }}" class="menu-link">
-                        <div data-i18n="Accordion">Accordion</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.alerts') ? 'active' : '' }}">
-                    <a href="{{ route('ui.alerts') }}" class="menu-link">
-                        <div data-i18n="Alerts">Alerts</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.badges') ? 'active' : '' }}">
-                    <a href="{{ route('ui.badges') }}" class="menu-link">
-                        <div data-i18n="Badges">Badges</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.buttons') ? 'active' : '' }}">
-                    <a href="{{ route('ui.buttons') }}" class="menu-link">
-                        <div data-i18n="Buttons">Buttons</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.carousel') ? 'active' : '' }}">
-                    <a href="{{ route('ui.carousel') }}" class="menu-link">
-                        <div data-i18n="Carousel">Carousel</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.collapse') ? 'active' : '' }}">
-                    <a href="{{ route('ui.collapse') }}" class="menu-link">
-                        <div data-i18n="Collapse">Collapse</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.dropdowns') ? 'active' : '' }}">
-                    <a href="{{ route('ui.dropdowns') }}" class="menu-link">
-                        <div data-i18n="Dropdowns">Dropdowns</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.footer') ? 'active' : '' }}">
-                    <a href="{{ route('ui.footer') }}" class="menu-link">
-                        <div data-i18n="Footer">Footer</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.list-groups') ? 'active' : '' }}">
-                    <a href="{{ route('ui.list-groups') }}" class="menu-link">
-                        <div data-i18n="List Groups">List groups</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.modals') ? 'active' : '' }}">
-                    <a href="{{ route('ui.modals') }}" class="menu-link">
-                        <div data-i18n="Modals">Modals</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.navbar') ? 'active' : '' }}">
-                    <a href="{{ route('ui.navbar') }}" class="menu-link">
-                        <div data-i18n="Navbar">Navbar</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.offcanvas') ? 'active' : '' }}">
-                    <a href="{{ route('ui.offcanvas') }}" class="menu-link">
-                        <div data-i18n="Offcanvas">Offcanvas</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.pagination-breadcrumbs') ? 'active' : '' }}">
-                    <a href="{{ route('ui.pagination-breadcrumbs') }}" class="menu-link">
-                        <div data-i18n="Pagination &amp; Breadcrumbs">Pagination &amp; Breadcrumbs</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.progress') ? 'active' : '' }}">
-                    <a href="{{ route('ui.progress') }}" class="menu-link">
-                        <div data-i18n="Progress">Progress</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.spinners') ? 'active' : '' }}">
-                    <a href="{{ route('ui.spinners') }}" class="menu-link">
-                        <div data-i18n="Spinners">Spinners</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.tabs-pills') ? 'active' : '' }}">
-                    <a href="{{ route('ui.tabs-pills') }}" class="menu-link">
-                        <div data-i18n="Tabs &amp; Pills">Tabs &amp; Pills</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.toasts') ? 'active' : '' }}">
-                    <a href="{{ route('ui.toasts') }}" class="menu-link">
-                        <div data-i18n="Toasts">Toasts</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.tooltips-popovers') ? 'active' : '' }}">
-                    <a href="{{ route('ui.tooltips-popovers') }}" class="menu-link">
-                        <div data-i18n="Tooltips & Popovers">Tooltips &amp; popovers</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('ui.typography') ? 'active' : '' }}">
-                    <a href="{{ route('ui.typography') }}" class="menu-link">
-                        <div data-i18n="Typography">Typography</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <!-- Extended components -->
-        <li class="menu-item {{ $isGroup('extended-ui') ? 'active open' : '' }}">
-            <a href="javascript:void(0)" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons bx bx-copy"></i>
-                <div data-i18n="Extended UI">Extended UI</div>
-            </a>
-            <ul class="menu-sub">
-                <li class="menu-item {{ $is('extended-ui.perfect-scrollbar') ? 'active' : '' }}">
-                    <a href="{{ route('extended-ui.perfect-scrollbar') }}" class="menu-link">
-                        <div data-i18n="Perfect Scrollbar">Perfect scrollbar</div>
-                    </a>
-                </li>
-                <li class="menu-item {{ $is('extended-ui.text-divider') ? 'active' : '' }}">
-                    <a href="{{ route('extended-ui.text-divider') }}" class="menu-link">
-                        <div data-i18n="Text Divider">Text Divider</div>
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li class="menu-item {{ $is('icons.boxicons') ? 'active' : '' }}">
-            <a href="{{ route('icons.boxicons') }}" class="menu-link">
-                <i class="menu-icon tf-icons bx bx-crown"></i>
-                <div data-i18n="Boxicons">Boxicons</div>
-            </a>
-        </li>
 
         <!-- Forms & Tables -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li>
+        {{-- <li class="menu-header small text-uppercase"><span class="menu-header-text">Forms &amp; Tables</span></li> --}}
         <!-- Forms -->
-        <li
+        {{-- <li
             class="menu-item {{ $is('forms.basic-inputs') || $is('forms.input-groups') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -337,8 +121,8 @@
                     </a>
                 </li>
             </ul>
-        </li>
-        <li
+        </li> --}}
+        {{-- <li
             class="menu-item {{ $is('forms.layouts-vertical') || $is('forms.layouts-horizontal') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-detail"></i>
@@ -356,30 +140,30 @@
                     </a>
                 </li>
             </ul>
-        </li>
+        </li> --}}
         <!-- Tables -->
-        <li class="menu-item {{ $is('tables.basic') ? 'active' : '' }}">
+        {{-- <li class="menu-item {{ $is('tables.basic') ? 'active' : '' }}">
             <a href="{{ route('tables.basic') }}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-table"></i>
                 <div data-i18n="Tables">Tables</div>
             </a>
-        </li>
+        </li> --}}
         <!-- Misc -->
-        <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
+        {{-- <li class="menu-header small text-uppercase"><span class="menu-header-text">Misc</span></li>
         <li class="menu-item">
             <a href="https://github.com/themeselection/sneat-html-admin-template-free/issues" target="_blank"
                 class="menu-link">
                 <i class="menu-icon tf-icons bx bx-support"></i>
                 <div data-i18n="Support">Support</div>
             </a>
-        </li>
-        <li class="menu-item">
+        </li> --}}
+        {{-- <li class="menu-item">
             <a href="https://themeselection.com/demo/sneat-bootstrap-html-admin-template/documentation/"
                 target="_blank" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file"></i>
                 <div data-i18n="Documentation">Documentation</div>
             </a>
-        </li>
+        </li> --}}
     </ul>
 </aside>
 <!-- / Menu -->
