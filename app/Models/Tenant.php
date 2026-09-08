@@ -33,4 +33,9 @@ class Tenant extends Model
     {
         return $this->hasOne(User::class)->whereHas('roles', fn ($query) => $query->where('name', 'admin'));
     }
+
+    public function mailConfigurations(): HasMany
+    {
+        return $this->hasMany(MailConfiguration::class);
+    }
 }

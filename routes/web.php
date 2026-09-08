@@ -4,10 +4,12 @@ use App\Http\Controllers\AccountSettingsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmailTemplateController;
 use App\Http\Controllers\ExtendedUiController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\IconsController;
 use App\Http\Controllers\LayoutsController;
+use App\Http\Controllers\MailConfigurationController;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\TenantController;
@@ -43,6 +45,24 @@ Route::middleware(['auth:web', 'role:super-admin|admin'])->prefix('users')->name
     Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
     Route::put('/{user}', [UserController::class, 'update'])->name('update');
     Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+});
+
+Route::middleware(['auth:web', 'role:admin'])->prefix('mail-configurations')->name('mail-configurations.')->group(function () {
+    Route::get('/', [MailConfigurationController::class, 'index'])->name('index');
+    Route::get('/create', [MailConfigurationController::class, 'create'])->name('create');
+    Route::post('/', [MailConfigurationController::class, 'store'])->name('store');
+    Route::get('/{mailConfiguration}/edit', [MailConfigurationController::class, 'edit'])->name('edit');
+    Route::put('/{mailConfiguration}', [MailConfigurationController::class, 'update'])->name('update');
+    Route::delete('/{mailConfiguration}', [MailConfigurationController::class, 'destroy'])->name('destroy');
+});
+
+Route::middleware(['auth:web'])->prefix('email-templates')->name('email-templates.')->group(function () {
+    Route::get('/', [EmailTemplateController::class, 'index'])->name('index');
+    Route::get('/create', [EmailTemplateController::class, 'create'])->name('create');
+    Route::post('/', [EmailTemplateController::class, 'store'])->name('store');
+    Route::get('/{emailTemplate}/edit', [EmailTemplateController::class, 'edit'])->name('edit');
+    Route::put('/{emailTemplate}', [EmailTemplateController::class, 'update'])->name('update');
+    Route::delete('/{emailTemplate}', [EmailTemplateController::class, 'destroy'])->name('destroy');
 });
 
 // Route::prefix('layouts')->name('layouts.')->group(function () {

@@ -94,6 +94,22 @@
                 </a>
             </li>
         @endif
+        @if (Auth::user()?->hasRole('admin'))
+            <li class="menu-item {{ $isGroup('mail-configurations') ? 'active open' : '' }}">
+                <a href="{{ route('mail-configurations.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-envelope"></i>
+                    <div data-i18n="Mail Configurations">Mail Configurations</div>
+                </a>
+            </li>
+        @endif
+        @if (Auth::user())
+            <li class="menu-item {{ $isGroup('email-templates') ? 'active open' : '' }}">
+                <a href="{{ route('email-templates.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-news"></i>
+                    <div data-i18n="Email Templates">Email Templates</div>
+                </a>
+            </li>
+        @endif
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pages</span>
