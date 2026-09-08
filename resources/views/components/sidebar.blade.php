@@ -4,6 +4,7 @@
     $route = request()->route()?->getName();
     $is = fn (string $name): bool => $route === $name;
     $isGroup = fn (string $prefix): bool => $route !== null && Str::startsWith($route, $prefix . '.');
+    $can = fn (string $permission): bool => Auth::user()?->can($permission) ?? false;
 @endphp
 <!-- Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -77,6 +78,7 @@
             <span class="menu-header-text">Pages</span>
         </li>
         <li class="menu-item {{ $isGroup('account-settings') ? 'active open' : '' }}">
+            @if ($can('view account settings'))
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-dock-top"></i>
                 <div data-i18n="Account Settings">Account Settings</div>
@@ -98,6 +100,7 @@
                     </a>
                 </li>
             </ul>
+            @endif
         </li>
 
         <!-- Forms & Tables -->

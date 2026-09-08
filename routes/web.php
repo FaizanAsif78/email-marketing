@@ -22,7 +22,7 @@ Route::post('/login', [AuthController::class, 'authenticate'])->name('auth.authe
 Route::post('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 
 Route::middleware(['auth:web'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('permission:view dashboard');
 });
 
 // Route::prefix('layouts')->name('layouts.')->group(function () {
@@ -33,7 +33,7 @@ Route::middleware(['auth:web'])->group(function () {
 //     Route::get('/blank', [LayoutsController::class, 'blank'])->name('blank');
 // });
 
-Route::prefix('pages/account-settings')->name('account-settings.')->group(function () {
+Route::middleware(['auth:web', 'permission:view account settings'])->prefix('pages/account-settings')->name('account-settings.')->group(function () {
     Route::get('/account', [AccountSettingsController::class, 'account'])->name('account');
     Route::get('/notifications', [AccountSettingsController::class, 'notifications'])->name('notifications');
     Route::get('/connections', [AccountSettingsController::class, 'connections'])->name('connections');
