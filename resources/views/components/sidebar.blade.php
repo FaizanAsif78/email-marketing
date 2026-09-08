@@ -5,6 +5,7 @@
     $is = fn (string $name): bool => $route === $name;
     $isGroup = fn (string $prefix): bool => $route !== null && Str::startsWith($route, $prefix . '.');
     $can = fn (string $permission): bool => Auth::user()?->can($permission) ?? false;
+    $isSuperAdmin = fn (): bool => Auth::user()?->hasRole('super-admin') ?? false;
 @endphp
 <!-- Menu -->
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
@@ -73,6 +74,26 @@
             </a>
         </li>
 
+
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Management</span>
+        </li>
+        @if ($can('manage tenants'))
+            <li class="menu-item {{ $isGroup('tenants') ? 'active open' : '' }}">
+                <a href="{{ route('tenants.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-store"></i>
+                    <div data-i18n="Tenants">Tenants</div>
+                </a>
+            </li>
+        @endif
+        @if ($isSuperAdmin() || Auth::user()?->hasRole('admin'))
+            <li class="menu-item {{ $isGroup('users') ? 'active open' : '' }}">
+                <a href="{{ route('users.index') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-group"></i>
+                    <div data-i18n="Users">Users</div>
+                </a>
+            </li>
+        @endif
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pages</span>

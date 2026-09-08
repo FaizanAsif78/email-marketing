@@ -10,7 +10,9 @@ use App\Http\Controllers\IconsController;
 use App\Http\Controllers\LayoutsController;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UiController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', fn () => redirect()->route('dashboard.index'));
@@ -25,6 +27,24 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index')->middleware('permission:view dashboard');
 });
 
+Route::middleware(['auth:web', 'role:super-admin'])->prefix('tenants')->name('tenants.')->group(function () {
+    Route::get('/', [TenantController::class, 'index'])->name('index');
+    Route::get('/create', [TenantController::class, 'create'])->name('create');
+    Route::post('/', [TenantController::class, 'store'])->name('store');
+    Route::get('/{tenant}/edit', [TenantController::class, 'edit'])->name('edit');
+    Route::put('/{tenant}', [TenantController::class, 'update'])->name('update');
+    Route::delete('/{tenant}', [TenantController::class, 'destroy'])->name('destroy');
+});
+
+Route::middleware(['auth:web', 'role:super-admin|admin'])->prefix('users')->name('users.')->group(function () {
+    Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('/create', [UserController::class, 'create'])->name('create');
+    Route::post('/', [UserController::class, 'store'])->name('store');
+    Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
+    Route::put('/{user}', [UserController::class, 'update'])->name('update');
+    Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+});
+
 // Route::prefix('layouts')->name('layouts.')->group(function () {
 //     Route::get('/without-menu', [LayoutsController::class, 'withoutMenu'])->name('without-menu');
 //     Route::get('/without-navbar', [LayoutsController::class, 'withoutNavbar'])->name('without-navbar');
@@ -37,12 +57,6 @@ Route::middleware(['auth:web', 'permission:view account settings'])->prefix('pag
     Route::get('/account', [AccountSettingsController::class, 'account'])->name('account');
     Route::get('/notifications', [AccountSettingsController::class, 'notifications'])->name('notifications');
     Route::get('/connections', [AccountSettingsController::class, 'connections'])->name('connections');
-});
-
-Route::prefix('auth')->name('auth.')->group(function () {
-    Route::get('/login', [AuthController::class, 'login'])->name('login');
-    Route::get('/register', [AuthController::class, 'register'])->name('register');
-    Route::get('/forgot-password', [AuthController::class, 'forgotPassword'])->name('forgot-password');
 });
 
 // Route::prefix('pages/misc')->name('misc.')->group(function () {
