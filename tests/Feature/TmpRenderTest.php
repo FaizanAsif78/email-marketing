@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('dumps rendered create template page for inspection', function () {
+it('renders the create template page with TinyMCE', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get('/email-templates/create');
@@ -14,11 +14,11 @@ it('dumps rendered create template page for inspection', function () {
     file_put_contents('/tmp/email-template-create.html', $html);
 
     foreach ([
-        'grapes.min.css' => 'GRAPES CSS',
-        'grapes.min.js' => 'GRAPES JS',
-        'id="gjs"' => 'GJS CONTAINER',
-        'grapesjs.init' => 'INIT SCRIPT',
-        'gjs-one-bg' => 'CUSTOM CSS',
+        'assets/vendor/tinymce/tinymce.min.js' => 'TINYMCE JS',
+        'id="email-content"' => 'EDITOR TEXTAREA',
+        'tinymce.init' => 'INIT SCRIPT',
+        'placeholder-chips' => 'PLACEHOLDER CHIPS',
+        'data-insert-text' => 'INSERT BUTTONS',
     ] as $needle => $label) {
         fwrite(STDERR, $label.': '.(str_contains($html, $needle) ? 'YES' : 'NO').PHP_EOL);
     }

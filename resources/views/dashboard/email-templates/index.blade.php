@@ -51,7 +51,7 @@
                 <div class="card-body text-center py-5">
                     <i class="bx bx-news display-3 text-secondary"></i>
                     <h5 class="mt-3">No templates yet</h5>
-                    <p class="text-muted mb-3">Create your first email template with the drag-and-drop builder.</p>
+                    <p class="text-muted mb-3">Create your first guest posting email template with the rich text editor.</p>
                     <a href="{{ route('email-templates.create') }}" class="btn btn-primary">
                         <i class="bx bx-plus me-1"></i> New Template
                     </a>
