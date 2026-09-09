@@ -4,13 +4,6 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Email /</span> Templates</h4>
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="card mb-4">
             <div class="card-header flex-column flex-md-row">
                 <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">

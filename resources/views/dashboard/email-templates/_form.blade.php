@@ -84,10 +84,7 @@
 
             <div class="card-body pb-2">
                 @error('content')
-                    <div class="alert alert-danger alert-dismissible py-2" role="alert">
-                        {{ $message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
+                    <div class="form-text text-danger mt-2">{{ $message }}</div>
                 @enderror
 
                 <textarea id="email-content" name="content" rows="18">{{ old('content', $template?->content) }}</textarea>

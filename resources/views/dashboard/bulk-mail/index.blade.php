@@ -4,13 +4,6 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Email /</span> Bulk Mail History</h4>
 
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <div class="card mb-4">
             <div class="card-header flex-column flex-md-row">
                 <div class="d-flex align-items-center justify-content-between gap-2 flex-wrap">
@@ -75,7 +68,9 @@
                                     <td class="text-center text-success fw-semibold">{{ $mailing->sent_count }}</td>
                                     <td class="text-center {{ $mailing->failed_count > 0 ? 'text-danger fw-semibold' : '' }}">{{ $mailing->failed_count }}</td>
                                     <td>
-                                        @if ($mailing->status === \App\Models\BulkMailing::STATUS_FAILED)
+                                        @if ($mailing->status === \App\Models\BulkMailing::STATUS_PROCESSING)
+                                            <span class="badge bg-label-warning">Processing</span>
+                                        @elseif ($mailing->status === \App\Models\BulkMailing::STATUS_FAILED)
                                             <span class="badge bg-label-danger">Failed</span>
                                         @else
                                             <span class="badge bg-label-success">Completed</span>
@@ -97,16 +92,30 @@
                                     <td colspan="8" class="bg-lighter">
                                         <div class="p-3">
                                             <h6 class="fw-semibold mb-2">Recipients &amp; Delivery</h6>
-                                            @if ($mailing->results)
+                                            @php
+                                                $deliveries = $mailing->deliveries->keyBy('email');
+                                                $legacyResults = is_array($mailing->results) ? $mailing->results : [];
+                                            @endphp
+                                            @if ($deliveries->isNotEmpty() || $legacyResults)
                                                 <ul class="list-group list-group-flush">
                                                     @foreach ($mailing->recipients as $email)
-                                                        @php $status = $mailing->results[$email] ?? 'failed'; @endphp
+                                                        @php
+                                                            $delivery = $deliveries->get($email);
+                                                            $status = $delivery ? $delivery->status : ($legacyResults[$email] ?? null);
+                                                        @endphp
                                                         <li class="list-group-item d-flex align-items-center justify-content-between px-0">
-                                                            <span class="text-break">{{ $email }}</span>
+                                                            <span class="text-break me-2">{{ $email }}</span>
                                                             @if ($status === 'sent')
-                                                                <span class="badge bg-label-success"><i class="bx bx-check me-1"></i>Sent</span>
+                                                                <span class="badge bg-label-success text-nowrap"><i class="bx bx-check me-1"></i>Sent</span>
+                                                            @elseif ($status === 'failed')
+                                                                <span class="badge bg-label-danger text-nowrap">
+                                                                    <i class="bx bx-x me-1"></i>Failed
+                                                                    @if ($delivery?->error)
+                                                                        <span class="text-truncate d-inline-block align-middle" style="max-width: 260px;" title="{{ $delivery->error }}">{{ $delivery->error }}</span>
+                                                                    @endif
+                                                                </span>
                                                             @else
-                                                                <span class="badge bg-label-danger"><i class="bx bx-x me-1"></i>Failed</span>
+                                                                <span class="badge bg-label-secondary text-nowrap">—</span>
                                                             @endif
                                                         </li>
                                                     @endforeach
@@ -115,7 +124,7 @@
                                                 <p class="text-muted mb-0">No delivery details recorded.</p>
                                             @endif
                                             @if ($mailing->error)
-                                                <div class="alert alert-danger bg-label-danger mt-3 mb-0">
+                                                <div class="bg-lighter border rounded-3 p-3 mt-3">
                                                     <small><pre class="mb-0"><code>{{ $mailing->error }}</code></pre></small>
                                                 </div>
                                             @endif

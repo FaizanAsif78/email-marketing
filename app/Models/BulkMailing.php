@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable([
     'user_id',
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'failed_count',
     'status',
     'error',
+    'job_batch_id',
+    'completed_at',
 ])]
 class BulkMailing extends Model
 {
@@ -41,7 +44,40 @@ class BulkMailing extends Model
             'failed_count' => 'integer',
             'recipients' => 'array',
             'results' => 'array',
+            'completed_at' => 'datetime',
         ];
+    }
+
+    public function deliveries(): HasMany
+    {
+        return $this->hasMany(BulkMailingResult::class);
+    }
+
+    public static function finalizeResults(int $bulkMailingId): void
+    {
+        $mailing = static::find($bulkMailingId);
+
+        if (! $mailing) {
+            return;
+        }
+
+        $totals = BulkMailingResult::query()
+            ->where('bulk_mailing_id', $bulkMailingId)
+            ->selectRaw('count(*) as total')
+            ->selectRaw("sum(case when status = '".BulkMailingResult::STATUS_SENT."' then 1 else 0 end) as sent")
+            ->selectRaw("sum(case when status = '".BulkMailingResult::STATUS_FAILED."' then 1 else 0 end) as failed")
+            ->first();
+
+        $sent = (int) ($totals->sent ?? 0);
+        $failed = (int) ($totals->failed ?? 0);
+
+        $mailing->update([
+            'recipients_count' => (int) ($totals->total ?? count($mailing->recipients ?? [])),
+            'sent_count' => $sent,
+            'failed_count' => $failed,
+            'status' => $failed > 0 && $sent === 0 ? static::STATUS_FAILED : static::STATUS_COMPLETED,
+            'completed_at' => now(),
+        ]);
     }
 
     public function user(): BelongsTo

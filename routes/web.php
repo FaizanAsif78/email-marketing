@@ -71,6 +71,7 @@ Route::middleware(['auth:web'])->prefix('bulk-mail')->name('bulk-mail.')->group(
     Route::get('/create', [BulkMailController::class, 'create'])->name('create');
     Route::post('/parse', [BulkMailController::class, 'parseContacts'])->name('parse');
     Route::post('/test', [BulkMailController::class, 'sendTest'])->name('test');
+    Route::get('/batch-status', [BulkMailController::class, 'batchStatus'])->name('batch-status');
     Route::post('/send', [BulkMailController::class, 'send'])->name('send');
 });
 

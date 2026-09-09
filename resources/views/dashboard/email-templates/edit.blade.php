@@ -6,17 +6,6 @@
             <span class="text-muted fw-light">Email / Templates /</span> Edit Template
         </h4>
 
-        @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <p class="mb-0">
-                    @foreach ($errors->all() as $error)
-                        {{ $error }}<br />
-                    @endforeach
-                </p>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         <form method="POST" action="{{ route('email-templates.update', $template) }}" id="email-template-form">
             @method('PUT')
             @include('dashboard.email-templates._form', ['template' => $template])

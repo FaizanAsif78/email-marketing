@@ -27,6 +27,7 @@
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/vendor/libs/toastify/toastify.min.css') }}" />
 
     @stack('styles')
 
@@ -49,6 +50,53 @@
 
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+
+    <!-- Toastify notifications (project-wide) -->
+    <script src="{{ asset('assets/vendor/libs/toastify/toastify.min.js') }}"></script>
+    @php
+        $__appMessages = [];
+        foreach (['success', 'info', 'warning', 'error'] as $__flashKey) {
+            if (session($__flashKey)) {
+                $__appMessages[$__flashKey] = session($__flashKey);
+            }
+        }
+        if (isset($errors) && $errors->any()) {
+            $__appMessages['danger'] = collect($errors->all())->implode(' ');
+        }
+    @endphp
+    <script>
+        window.AppMessages = {!! Js::from($__appMessages) !!};
+
+        window.showToast = function (message, type, options) {
+            var styles = {
+                success: { background: '#2e7d32', color: '#ffffff' },
+                danger: { background: '#d32f2f', color: '#ffffff' },
+                warning: { background: '#f59f00', color: '#312e0a' },
+                info: { background: '#0d6efd', color: '#ffffff' },
+            };
+            var style = styles[type] || styles.info;
+            if (options && options.style) {
+                style = Object.assign({}, style, options.style);
+            }
+            return Toastify({
+                text: message,
+                duration: options && typeof options.duration === 'number' ? options.duration : 4500,
+                gravity: 'bottom',
+                position: 'right',
+                close: true,
+                stopOnFocus: true,
+                style: style,
+                onClick: options && options.onClick ? options.onClick : undefined,
+            }).showToast();
+        };
+
+        window.addEventListener('DOMContentLoaded', function () {
+            if (!window.AppMessages) return;
+            Object.keys(window.AppMessages).forEach(function (key) {
+                window.showToast(window.AppMessages[key], key === 'error' ? 'danger' : key);
+            });
+        });
+    </script>
 
     @stack('scripts')
 </body>

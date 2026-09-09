@@ -4,30 +4,6 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Email /</span> Bulk Mail Sender</h4>
 
-        @if (session('success') && !session('warning'))
-            <div class="alert alert-success alert-dismissible" role="alert">
-                <i class="bx bxs-check-circle me-1"></i> {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        @if (session('warning'))
-            <div class="alert alert-warning alert-dismissible" role="alert">
-                <i class="bx bxs-error-circle me-1"></i> {{ session('warning') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-        @if (isset($errors) && $errors->any())
-            <div class="alert alert-danger alert-dismissible" role="alert">
-                <i class="bx bxs-error me-1"></i>
-                <ul class="mb-0 ps-3">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
         {{-- Campaign setup --}}
         <div class="card mb-4">
             <div class="card-header flex-column flex-md-row">
@@ -332,8 +308,10 @@
         <script>
             (function () {
                 const scope = window.BulkMail;
+                const statusUrl = '{{ route('bulk-mail.batch-status') }}';
                 const recipients = [];
                 const set = new Set();
+                let sending = false;
 
                 const $ = (sel) => document.querySelector(sel);
                 const $all = (sel) => Array.from(document.querySelectorAll(sel));
@@ -476,7 +454,7 @@
 
                 function updateSendState() {
                     const ready = configPicker.value !== '' && templatePicker.value !== '' && recipients.length > 0;
-                    sendButton.disabled = !ready;
+                    sendButton.disabled = !ready || sending;
 
                     if (configPicker.value !== '' && templatePicker.value !== '' && recipients.length > 0) {
                         sendButtonLabel.textContent = `Send ${recipients.length} Email${recipients.length === 1 ? '' : 's'}`;
@@ -545,14 +523,7 @@
                 }
 
                 function flash(message, type) {
-                    const box = document.createElement('div');
-                    box.className = `alert alert-${type} alert-dismissible`;
-                    box.setAttribute('role', 'alert');
-                    box.innerHTML = `<i class="bx ${type === 'danger' ? 'bxs-error' : 'bxs-check-circle'} me-1"></i> ${message}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>`;
-                    const anchor = document.querySelector('.container-xxl .fw-bold');
-                    anchor.insertAdjacentElement('afterend', box);
-                    setTimeout(() => box.remove(), 5000);
+                    showToast(message, type);
                 }
 
                 $('#testMailBtn').addEventListener('click', async () => {
@@ -621,6 +592,45 @@
 
                 if (window.bootstrap) { /* bootstrap loaded on every dashboard page */ }
 
+                function trackBatch(batchId, total) {
+                    let polls = 0;
+                    const maxPolls = 40;
+                    const poll = setInterval(async () => {
+                        try {
+                            const response = await fetch(statusUrl + '?batch_id=' + encodeURIComponent(batchId), {
+                                headers: { 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content ?? '{{ csrf_token() }}' },
+                            });
+                            const data = await response.json();
+                            if (!data.finished) {
+                                if (++polls > maxPolls) {
+                                    clearInterval(poll);
+                                    sending = false;
+                                    sendButtonLabel.textContent = 'Send Emails';
+                                    showToast('Campaign is taking longer than expected. Make sure the queue worker is running.', 'warning', { duration: 8000 });
+                                    updateSendState();
+                                }
+                                return;
+                            }
+                            clearInterval(poll);
+                            sending = false;
+                            if (data.sent > 0 && data.failed === 0) {
+                                showToast(`Campaign complete — ${data.sent} email${data.sent === 1 ? '' : 's'} delivered successfully.`, 'success');
+                            } else if (data.failed > 0) {
+                                showToast(`Campaign finished — ${data.sent} email${data.sent === 1 ? '' : 's'} delivered, ${data.failed} failed.`, 'warning');
+                            } else {
+                                showToast('Campaign could not be delivered.', 'danger');
+                            }
+                            recipients.length = 0;
+                            set.clear();
+                            renderRecipients();
+                        } catch (err) {
+                            clearInterval(poll);
+                            sending = false;
+                            updateSendState();
+                        }
+                    }, 3000);
+                }
+
                 jQuery('#sendForm').on('submit', function (e) {
                     e.preventDefault();
 
@@ -628,6 +638,7 @@
                         return;
                     }
 
+                    sending = true;
                     sendButton.disabled = true;
                     sendButtonLabel.textContent = 'Sending…';
 
@@ -643,24 +654,34 @@
                         },
                     })
                     .done((data) => {
-                        if (data.failed > 0) {
-                            flash(data.message || 'Campaign sent with some failures.', 'warning');
+                        if (data.queued) {
+                            const total = data.total || recipients.length;
+                            const batches = data.batches || 0;
+                            sendButtonLabel.textContent = batches > 0 ? 'Queued…' : 'Sending…';
+                            sendSummary.innerHTML = `<strong>${total}</strong> email${total === 1 ? '' : 's'} <span class="text-primary">queued</span> in ${batches} batch${batches === 1 ? '' : 'es'} of 10 — sending in the background.`;
+                            sendSubSummary.textContent = 'You will be notified here when the campaign finishes.';
+                            showToast(data.message || 'Campaign queued for background delivery.', 'success');
+                            trackBatch(data.batch_id, total);
                         } else {
-                            flash(data.message || 'Campaign sent successfully.', 'success');
+                            if (data.failed > 0) {
+                                showToast(data.message || 'Campaign sent with some failures.', 'warning');
+                            } else {
+                                showToast(data.message || 'Campaign sent successfully.', 'success');
+                            }
+                            sending = false;
+                            recipients.length = 0;
+                            set.clear();
+                            renderRecipients();
                         }
-                        recipients.length = 0;
-                        set.clear();
-                        renderRecipients();
                     })
                     .fail((xhr) => {
                         const body = xhr.responseJSON || {};
                         const message = body.message
                             || (body.errors ? Object.values(body.errors).flat().join(' ') : '')
                             || 'Failed to send the campaign.';
-                        flash(message, 'danger');
-                    })
-                    .always(() => {
-                        updateSendState();
+                        sending = false;
+                        showToast(message, 'danger');
+                        renderRecipients();
                     });
                 });
 
