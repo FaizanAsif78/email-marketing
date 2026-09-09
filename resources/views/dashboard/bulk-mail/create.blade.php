@@ -621,18 +621,17 @@
 
                 if (window.bootstrap) { /* bootstrap loaded on every dashboard page */ }
 
-                $('#sendForm').on('submit', function (e) {
+                jQuery('#sendForm').on('submit', function (e) {
                     e.preventDefault();
 
                     if (!configPicker.value || !templatePicker.value || recipients.length === 0) {
                         return;
                     }
 
-                    const original = sendButton.innerHTML;
                     sendButton.disabled = true;
-                    sendButton.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Sending…';
+                    sendButtonLabel.textContent = 'Sending…';
 
-                    $.ajax({
+                    jQuery.ajax({
                         url: '{{ route('bulk-mail.send') }}',
                         method: 'POST',
                         dataType: 'json',
@@ -661,7 +660,6 @@
                         flash(message, 'danger');
                     })
                     .always(() => {
-                        sendButton.innerHTML = original;
                         updateSendState();
                     });
                 });

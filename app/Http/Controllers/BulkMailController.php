@@ -86,6 +86,7 @@ class BulkMailController extends Controller
 
     public function send(Request $request): JsonResponse|RedirectResponse
     {
+        // dd($request->all());
         $data = $request->validate([
             'mail_configuration_id' => ['required', 'integer'],
             'email_template_id' => ['required', 'integer'],
