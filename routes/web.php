@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountSettingsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BulkMailController;
 use App\Http\Controllers\CardController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EmailTemplateController;
@@ -65,6 +66,14 @@ Route::middleware(['auth:web'])->prefix('email-templates')->name('email-template
     Route::delete('/{emailTemplate}', [EmailTemplateController::class, 'destroy'])->name('destroy');
 });
 
+Route::middleware(['auth:web'])->prefix('bulk-mail')->name('bulk-mail.')->group(function () {
+    Route::get('/', [BulkMailController::class, 'index'])->name('index');
+    Route::get('/create', [BulkMailController::class, 'create'])->name('create');
+    Route::post('/parse', [BulkMailController::class, 'parseContacts'])->name('parse');
+    Route::post('/test', [BulkMailController::class, 'sendTest'])->name('test');
+    Route::post('/send', [BulkMailController::class, 'send'])->name('send');
+});
+
 // Route::prefix('layouts')->name('layouts.')->group(function () {
 //     Route::get('/without-menu', [LayoutsController::class, 'withoutMenu'])->name('without-menu');
 //     Route::get('/without-navbar', [LayoutsController::class, 'withoutNavbar'])->name('without-navbar');
@@ -73,8 +82,12 @@ Route::middleware(['auth:web'])->prefix('email-templates')->name('email-template
 //     Route::get('/blank', [LayoutsController::class, 'blank'])->name('blank');
 // });
 
-Route::middleware(['auth:web', 'permission:view account settings'])->prefix('pages/account-settings')->name('account-settings.')->group(function () {
+Route::middleware(['auth:web', 'permission:view account settings'])->prefix('dashboard/account-settings')->name('account-settings.')->group(function () {
     Route::get('/account', [AccountSettingsController::class, 'account'])->name('account');
+    Route::put('/account', [AccountSettingsController::class, 'update'])->name('update');
+});
+
+Route::middleware(['auth:web', 'permission:view account settings'])->prefix('pages/account-settings')->name('account-settings.')->group(function () {
     Route::get('/notifications', [AccountSettingsController::class, 'notifications'])->name('notifications');
     Route::get('/connections', [AccountSettingsController::class, 'connections'])->name('connections');
 });

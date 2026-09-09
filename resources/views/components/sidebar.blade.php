@@ -110,6 +110,14 @@
                 </a>
             </li>
         @endif
+        @if (Auth::user())
+            <li class="menu-item {{ $isGroup('bulk-mail') ? 'active open' : '' }}">
+                <a href="{{ route('bulk-mail.create') }}" class="menu-link">
+                    <i class="menu-icon tf-icons bx bx-send"></i>
+                    <div data-i18n="Bulk Mail">Bulk Mail</div>
+                </a>
+            </li>
+        @endif
 
         <li class="menu-header small text-uppercase">
             <span class="menu-header-text">Pages</span>
